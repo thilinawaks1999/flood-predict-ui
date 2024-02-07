@@ -11,9 +11,9 @@ const initialState: HomeState = {
 
 export const loadHomeData = createAsyncThunk(
   "home/fetchData",
-  async (request: any) => {
+  async (request: { id: number }) => {
     return {
-      id: 1,
+      id: request.id,
     };
   }
 );
