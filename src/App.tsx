@@ -5,6 +5,7 @@ import { Box } from "@mui/system";
 import { useAppSelector } from "./redux/hooks";
 import { darkTheme, lightTheme } from "./utils/theme";
 import NavBar from "./components/NavBar";
+import image from "./assets/flood.jpg";
 
 function App() {
   const homeState = useAppSelector((state) => state.home);
@@ -19,8 +20,27 @@ function App() {
           <Grid item xs={12} sm={8} md={6}>
             <Form />
           </Grid>
-          <Grid item xs={12} sm={8} md={6}>
-            <Form />
+          <Grid
+            item
+            xs={12}
+            sm={8}
+            md={6}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src={image}
+              alt="Flood_Image"
+              width="80%"
+              height="80%"
+              style={{
+                borderRadius: "10px",
+                margin: "20px",
+              }}
+            />
           </Grid>
         </Grid>
       </Box>
