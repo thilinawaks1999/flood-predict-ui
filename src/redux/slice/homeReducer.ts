@@ -2,18 +2,18 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 export type HomeState = {
-  id: number;
+  mode: "light" | "dark";
 };
 
 const initialState: HomeState = {
-  id: 0,
+  mode: "light",
 };
 
-export const loadHomeData = createAsyncThunk(
-  "home/fetchData",
-  async (request: { id: number }) => {
+export const changeTheme = createAsyncThunk(
+  "home/theme",
+  async (request: { mode: "light" | "dark" }) => {
     return {
-      id: request.id,
+      mode: request.mode,
     };
   }
 );
@@ -24,14 +24,11 @@ export const homeSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loadHomeData.pending, (state) => {
-        state.id = 0;
+      .addCase(changeTheme.fulfilled, (state, action: PayloadAction<any>) => {
+        state.mode = action.payload.mode;
       })
-      .addCase(loadHomeData.fulfilled, (state, action: PayloadAction<any>) => {
-        state.id = action.payload.id;
-      })
-      .addCase(loadHomeData.rejected, (state) => {
-        state.id = 0;
+      .addCase(changeTheme.rejected, (state) => {
+        state.mode = "light";
       })
       .addDefaultCase(() => {});
   },
