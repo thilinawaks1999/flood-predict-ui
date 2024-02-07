@@ -17,14 +17,14 @@ export function configStore() {
 
 export type AppDispatch = ThunkDispatch<
   {
-    baseWidget: HomeState;
+    home: HomeState;
   },
   undefined,
   AnyAction
 >;
 
 export type RootState = {
-  baseWidget: HomeState;
+  home: HomeState;
 };
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,

@@ -10,7 +10,7 @@ const initialState: HomeState = {
 };
 
 export const loadHomeData = createAsyncThunk(
-  "baseWidget/fetchData",
+  "home/fetchData",
   async (request: any) => {
     return {
       id: 1,
@@ -18,7 +18,7 @@ export const loadHomeData = createAsyncThunk(
   }
 );
 
-export const baseWidgetSlice = createSlice({
+export const homeSlice = createSlice({
   name: "home",
   initialState,
   reducers: {},
@@ -37,6 +37,6 @@ export const baseWidgetSlice = createSlice({
   },
 });
 
-export const selectBaseWidgetData = (state: RootState) => state.baseWidget;
+export const selectBaseWidgetData = (state: RootState) => state.home;
 
-export default baseWidgetSlice.reducer;
+export default homeSlice.reducer;
