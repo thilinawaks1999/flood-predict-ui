@@ -5,7 +5,7 @@ import { Box } from "@mui/system";
 import { useAppSelector } from "./redux/hooks";
 import { darkTheme, lightTheme } from "./utils/theme";
 import NavBar from "./components/NavBar";
-import image from "./assets/flood.jpg";
+import image from "./assets/flood3.png";
 
 function App() {
   const homeState = useAppSelector((state) => state.home);
@@ -34,8 +34,8 @@ function App() {
             <img
               src={image}
               alt="Flood_Image"
-              width="80%"
-              height="80%"
+              width="100%"
+              height="100%"
               style={{
                 borderRadius: "10px",
                 margin: "20px",

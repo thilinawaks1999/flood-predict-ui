@@ -8,6 +8,7 @@ import {
   LinearProgressProps,
   LinearProgress,
   Skeleton,
+  Grow,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import * as Yup from "yup";
@@ -75,116 +76,128 @@ function Form() {
 
   return (
     <Box>
-      <Paper
-        sx={{
-          p: 2,
-          m: 2,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
+      <Grow
+        in={true}
+        style={{ transformOrigin: "0 0 0" }}
+        {...(true ? { timeout: 1000 } : {})}
       >
-        <Typography variant="h4" gutterBottom>
-          Search For Result
-        </Typography>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={onSubmit}
-        >
-          <FormHandle>
-            <Field
-              name="latitude"
-              type="number"
-              label="Latitude"
-              variant="outlined"
-              as={TextField}
-              sx={{ mb: 2 }}
-              fullWidth
-            />
-            <ErrorMessage
-              render={(msg) => (
-                <Typography variant="caption" color="error">
-                  {msg}
-                </Typography>
-              )}
-              name={"latitude"}
-            />
-
-            <Field
-              name="longitude"
-              type="number"
-              label="Longitude"
-              variant="outlined"
-              as={TextField}
-              sx={{ mb: 2 }}
-              fullWidth
-            />
-            <ErrorMessage
-              render={(msg) => (
-                <Typography variant="caption" color="error">
-                  {msg}
-                </Typography>
-              )}
-              name={"longitude"}
-            />
-
-            <LoadingButton
-              variant="outlined"
-              fullWidth
-              type="submit"
-              loading={homeState.processPending}
-              disabled={homeState.processPending}
-            >
-              Process
-            </LoadingButton>
-          </FormHandle>
-        </Formik>
-      </Paper>
-      <Paper
-        sx={{
-          p: 9,
-          m: 2,
-        }}
-      >
-        <Box
+        <Paper
           sx={{
+            p: 2,
+            m: 2,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
           <Typography variant="h4" gutterBottom>
-            Predicted Result
+            Search For Result
           </Typography>
-          <Chip
-            label={homeState.riskLevel || "See Result Here"}
-            sx={{ m: 5, px: 10, py: 4, borderRadius: 5, fontSize: "1.5rem" }}
-            color={
-              homeState.riskLevel === "Low"
-                ? "info"
-                : homeState.riskLevel === "Medium"
-                ? "warning"
-                : homeState.riskLevel === "High"
-                ? "error"
-                : "success"
-            }
-          />
-        </Box>
-        <Typography variant="h6" gutterBottom>
-          Predicted Risk Percentage
-        </Typography>
-        {homeState.percentagePending ? (
-          <Skeleton variant="text" sx={{ fontSize: "1rem", my: 2 }} />
-        ) : (
-          <LinearProgressWithLabel
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+          >
+            <FormHandle>
+              <Field
+                name="latitude"
+                type="number"
+                label="Latitude"
+                variant="outlined"
+                as={TextField}
+                sx={{ mb: 2 }}
+                fullWidth
+              />
+              <ErrorMessage
+                render={(msg) => (
+                  <Typography variant="caption" color="error">
+                    {msg}
+                  </Typography>
+                )}
+                name={"latitude"}
+              />
+
+              <Field
+                name="longitude"
+                type="number"
+                label="Longitude"
+                variant="outlined"
+                as={TextField}
+                sx={{ mb: 2 }}
+                fullWidth
+              />
+              <ErrorMessage
+                render={(msg) => (
+                  <Typography variant="caption" color="error">
+                    {msg}
+                  </Typography>
+                )}
+                name={"longitude"}
+              />
+
+              <LoadingButton
+                variant="outlined"
+                fullWidth
+                type="submit"
+                loading={homeState.processPending}
+                disabled={homeState.processPending}
+              >
+                Process
+              </LoadingButton>
+            </FormHandle>
+          </Formik>
+        </Paper>
+      </Grow>
+      <Grow
+        in={true}
+        style={{ transformOrigin: "0 0 0" }}
+        {...(true ? { timeout: 1000 } : {})}
+      >
+        <Paper
+          sx={{
+            p: 9,
+            m: 2,
+          }}
+        >
+          <Box
             sx={{
-              my: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
-            value={progress}
-          />
-        )}
-      </Paper>
+          >
+            <Typography variant="h4" gutterBottom>
+              Predicted Result
+            </Typography>
+            <Chip
+              label={homeState.riskLevel || "See Result Here"}
+              sx={{ m: 5, px: 10, py: 4, borderRadius: 5, fontSize: "1.5rem" }}
+              color={
+                homeState.riskLevel === "Low"
+                  ? "info"
+                  : homeState.riskLevel === "Medium"
+                  ? "warning"
+                  : homeState.riskLevel === "High"
+                  ? "error"
+                  : "success"
+              }
+            />
+          </Box>
+          <Typography variant="h6" gutterBottom>
+            Predicted Risk Percentage
+          </Typography>
+          {homeState.percentagePending ? (
+            <Skeleton variant="text" sx={{ fontSize: "1rem", my: 2 }} />
+          ) : (
+            <LinearProgressWithLabel
+              sx={{
+                my: 2,
+              }}
+              value={progress}
+            />
+          )}
+        </Paper>
+      </Grow>
     </Box>
   );
 }

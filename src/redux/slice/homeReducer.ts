@@ -43,8 +43,8 @@ export const fetchData = createAsyncThunk(
     //fetch data from API and calculate risk level and percentage here
     return new Promise((resolve) => {
       resolve({
-        riskLevel: "Medium", // Hardcoded for now
-        riskPercentage: 60, // Hardcoded for now
+        riskLevel: "High", // Hardcoded for now
+        riskPercentage: 80, // Hardcoded for now
       });
     });
   }
