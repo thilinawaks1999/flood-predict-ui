@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 
 interface FloodMapProps {
-  data: number[][];
+  data: number[][]; // The data array should contain values between 0 and 1
 }
 
 const FloodMap: React.FC<FloodMapProps> = ({ data }) => {
@@ -12,6 +12,7 @@ const FloodMap: React.FC<FloodMapProps> = ({ data }) => {
   });
   const [floodHeight, setFloodHeight] = useState<string | null>(null);
 
+  // Handle window resize
   useEffect(() => {
     function handleResize() {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
@@ -23,6 +24,7 @@ const FloodMap: React.FC<FloodMapProps> = ({ data }) => {
     };
   }, []);
 
+  // Update canvas whenever data or dimensions change
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || data.length === 0 || data[0].length === 0) return;
@@ -35,24 +37,26 @@ const FloodMap: React.FC<FloodMapProps> = ({ data }) => {
 
     const imageData = ctx.createImageData(dimensions.width, dimensions.height);
 
+    // Apply color mapping based on data
     for (let i = 0; i < dimensions.height; i++) {
       for (let j = 0; j < dimensions.width; j++) {
+        const dataIndexY = Math.floor((i / dimensions.height) * data.length);
+        const dataIndexX = Math.floor((j / dimensions.width) * data[0].length);
+        const height = data[dataIndexY][dataIndexX];
+        const [r, g, b] = getColorForHeight(height);
+
         const pos = (i * dimensions.width + j) * 4;
-        const scaledValue = Math.floor(
-          data[Math.floor((i / dimensions.height) * data.length)][
-            Math.floor((j / dimensions.width) * data[0].length)
-          ] * 255
-        );
-        imageData.data[pos] = scaledValue;
-        imageData.data[pos + 1] = scaledValue;
-        imageData.data[pos + 2] = scaledValue;
-        imageData.data[pos + 3] = 255;
+        imageData.data[pos] = r;
+        imageData.data[pos + 1] = g;
+        imageData.data[pos + 2] = b;
+        imageData.data[pos + 3] = 255; // Fully opaque
       }
     }
 
     ctx.putImageData(imageData, 0, 0);
   }, [data, dimensions]);
 
+  // Mouse move handler to display flood height
   const handleMouseMove = (
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>
   ) => {
@@ -63,6 +67,14 @@ const FloodMap: React.FC<FloodMapProps> = ({ data }) => {
     const j = Math.floor((x / dimensions.width) * data[0].length);
     const height = data[i][j];
     setFloodHeight(`Flood height at (${i}, ${j}): ${height.toFixed(2)}`);
+  };
+
+  // Color mapping function
+  const getColorForHeight = (height: number): [number, number, number] => {
+    if (height < 0.2) return [24, 77, 71]; // Deep water
+    else if (height < 0.4) return [54, 117, 136]; // Shallow water
+    else if (height < 0.6) return [96, 185, 154]; // Near shore
+    else return [220, 217, 57]; // Land
   };
 
   return (
