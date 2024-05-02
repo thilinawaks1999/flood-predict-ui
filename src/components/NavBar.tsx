@@ -6,8 +6,14 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import { useAppDispatch } from "../redux/hooks";
-import { changeTheme } from "../redux/slice/homeReducer";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import {
+  changeComponent,
+  changeTheme,
+  fetchTiffData,
+} from "../redux/slice/homeReducer";
+import { Button, MenuItem, Modal } from "@mui/material";
+import FloodMap from "./FloodMap";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -58,6 +64,14 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 
 export default function NavBar() {
   const dispatch = useAppDispatch();
+  const homeState = useAppSelector((state) => state.home);
+  const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!homeState.tiffData) {
+      dispatch(fetchTiffData());
+    }
+  }, [dispatch, homeState.tiffData]);
 
   const handleModeChange = (
     event: React.MouseEvent<HTMLLabelElement, MouseEvent>
@@ -69,6 +83,22 @@ export default function NavBar() {
     );
   };
 
+  const handleClickViewMap = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleClickHeight = () => {
+    dispatch(changeComponent({ component: "height" }));
+  };
+
+  const handleClickDamage = () => {
+    dispatch(changeComponent({ component: "damage" }));
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -76,13 +106,44 @@ export default function NavBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Flood Predict
           </Typography>
+          <MenuItem onClick={handleClickHeight}>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Flood Height
+            </Typography>
+          </MenuItem>
+          <MenuItem onClick={handleClickDamage}>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Flood Damage
+            </Typography>
+          </MenuItem>
           <FormControlLabel
             control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
             label=""
             onClick={handleModeChange}
           />
+          <Button
+            variant="outlined"
+            sx={{ m: 1 }}
+            onClick={handleClickViewMap}
+            disabled={!homeState.tiffData}
+          >
+            View Map
+          </Button>
         </Toolbar>
       </AppBar>
+      {homeState.tiffData && (
+        <Modal
+          open={open}
+          onClose={handleClose}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <FloodMap data={homeState.tiffData} />
+        </Modal>
+      )}
     </Box>
   );
 }

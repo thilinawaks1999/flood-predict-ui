@@ -1,66 +1,14 @@
 import React from "react";
-import {
-  Box,
-  Paper,
-  TextField,
-  Chip,
-  Typography,
-  LinearProgressProps,
-  LinearProgress,
-  Skeleton,
-  Grow,
-  Button,
-  Grid,
-  Modal,
-} from "@mui/material";
+import { Box, Paper, TextField, Chip, Typography, Grow } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import * as Yup from "yup";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { fetchData } from "../redux/slice/homeReducer";
 import { Formik, Form as FormHandle, ErrorMessage, Field } from "formik";
-import FloodMap from "./FloodMap";
-
-function LinearProgressWithLabel(
-  props: LinearProgressProps & { value: number }
-) {
-  return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Box sx={{ width: "100%", mr: 1 }}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
-      <Box sx={{ minWidth: 35 }}>
-        <Typography variant="body2" color="text.secondary">{`${Math.round(
-          props.value
-        )}%`}</Typography>
-      </Box>
-    </Box>
-  );
-}
+import { fetchFloodHeight } from "../redux/slice/homeReducer";
 
 function Form() {
-  const [progress, setProgress] = React.useState(10);
   const dispatch = useAppDispatch();
   const homeState = useAppSelector((state) => state.home);
-  const [open, setOpen] = React.useState(false);
-
-  const loadToValue = homeState.riskPercentage;
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prevProgress) =>
-        prevProgress >= loadToValue ? loadToValue : prevProgress + 1
-      );
-    }, 50);
-    return () => {
-      clearInterval(timer);
-    };
-  }, [
-    dispatch,
-    homeState.riskPercentage,
-    homeState.processPending,
-    homeState.percentagePending,
-    loadToValue,
-  ]);
 
   const validationSchema = Yup.object().shape({
     latitude: Yup.number().min(1).required("Latitude is required"),
@@ -76,15 +24,7 @@ function Form() {
   };
 
   const onSubmit = (values: typeof initialValues) => {
-    dispatch(fetchData(values));
-  };
-
-  const handleClickViewMap = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+    dispatch(fetchFloodHeight(values));
   };
 
   return (
@@ -148,13 +88,7 @@ function Form() {
                 name={"longitude"}
               />
 
-              <LoadingButton
-                variant="outlined"
-                fullWidth
-                type="submit"
-                loading={homeState.processPending}
-                disabled={homeState.processPending}
-              >
+              <LoadingButton variant="outlined" fullWidth type="submit">
                 Process
               </LoadingButton>
             </FormHandle>
@@ -182,10 +116,37 @@ function Form() {
             <Typography variant="h4" gutterBottom>
               Predicted Result
             </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
+            {homeState.floodHeightPending && (
+              <Chip
+                label={"Loading..."}
+                sx={{
+                  m: 5,
+                  px: 10,
+                  py: 4,
+                  borderRadius: 5,
+                  fontSize: "1.5rem",
+                }}
+                color={"info"}
+              />
+            )}
+            {!homeState.floodHeightPending && homeState.floodHeightError && (
+              <Chip
+                label={homeState.floodHeightError}
+                sx={{
+                  m: 5,
+                  px: 10,
+                  py: 4,
+                  borderRadius: 5,
+                  fontSize: "1.5rem",
+                }}
+                color={"error"}
+              />
+            )}
+            {!homeState.floodHeightPending &&
+              !homeState.floodHeightError &&
+              homeState.floodHeight && (
                 <Chip
-                  label={homeState.riskLevel || "See Result Here"}
+                  label={`Flood Height: ${homeState.floodHeight}m`}
                   sx={{
                     m: 5,
                     px: 10,
@@ -193,57 +154,27 @@ function Form() {
                     borderRadius: 5,
                     fontSize: "1.5rem",
                   }}
-                  color={
-                    homeState.riskLevel === "Low"
-                      ? "info"
-                      : homeState.riskLevel === "Medium"
-                      ? "warning"
-                      : homeState.riskLevel === "High"
-                      ? "error"
-                      : "success"
-                  }
+                  color={"success"}
                 />
-              </Grid>
-              <Grid item xs={6}>
-                <Button
-                  variant="outlined"
-                  sx={{ m: 7 }}
-                  onClick={handleClickViewMap}
-                  disabled={!homeState.tiffData}
-                >
-                  View Map
-                </Button>
-              </Grid>
-            </Grid>
+              )}
+            {!homeState.floodHeightPending &&
+              !homeState.floodHeightError &&
+              !homeState.floodHeight && (
+                <Chip
+                  label={`See the result here`}
+                  sx={{
+                    m: 5,
+                    px: 10,
+                    py: 4,
+                    borderRadius: 5,
+                    fontSize: "1.5rem",
+                  }}
+                  color={"warning"}
+                />
+              )}
           </Box>
-          <Typography variant="h6" gutterBottom>
-            Predicted Risk Percentage
-          </Typography>
-          {homeState.percentagePending ? (
-            <Skeleton variant="text" sx={{ fontSize: "1rem", my: 2 }} />
-          ) : (
-            <LinearProgressWithLabel
-              sx={{
-                my: 2,
-              }}
-              value={progress}
-            />
-          )}
         </Paper>
       </Grow>
-      {homeState.tiffData && (
-        <Modal
-          open={open}
-          onClose={handleClose}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <FloodMap data={homeState.tiffData} />
-        </Modal>
-      )}
     </Box>
   );
 }
