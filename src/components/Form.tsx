@@ -9,12 +9,16 @@ import {
   LinearProgress,
   Skeleton,
   Grow,
+  Button,
+  Grid,
+  Modal,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import * as Yup from "yup";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { fetchData } from "../redux/slice/homeReducer";
 import { Formik, Form as FormHandle, ErrorMessage, Field } from "formik";
+import FloodMap from "./FloodMap";
 
 function LinearProgressWithLabel(
   props: LinearProgressProps & { value: number }
@@ -37,6 +41,7 @@ function Form() {
   const [progress, setProgress] = React.useState(10);
   const dispatch = useAppDispatch();
   const homeState = useAppSelector((state) => state.home);
+  const [open, setOpen] = React.useState(false);
 
   const loadToValue = homeState.riskPercentage;
 
@@ -72,6 +77,14 @@ function Form() {
 
   const onSubmit = (values: typeof initialValues) => {
     dispatch(fetchData(values));
+  };
+
+  const handleClickViewMap = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -169,19 +182,39 @@ function Form() {
             <Typography variant="h4" gutterBottom>
               Predicted Result
             </Typography>
-            <Chip
-              label={homeState.riskLevel || "See Result Here"}
-              sx={{ m: 5, px: 10, py: 4, borderRadius: 5, fontSize: "1.5rem" }}
-              color={
-                homeState.riskLevel === "Low"
-                  ? "info"
-                  : homeState.riskLevel === "Medium"
-                  ? "warning"
-                  : homeState.riskLevel === "High"
-                  ? "error"
-                  : "success"
-              }
-            />
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Chip
+                  label={homeState.riskLevel || "See Result Here"}
+                  sx={{
+                    m: 5,
+                    px: 10,
+                    py: 4,
+                    borderRadius: 5,
+                    fontSize: "1.5rem",
+                  }}
+                  color={
+                    homeState.riskLevel === "Low"
+                      ? "info"
+                      : homeState.riskLevel === "Medium"
+                      ? "warning"
+                      : homeState.riskLevel === "High"
+                      ? "error"
+                      : "success"
+                  }
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  variant="outlined"
+                  sx={{ m: 7 }}
+                  onClick={handleClickViewMap}
+                  disabled={!homeState.tiffData}
+                >
+                  View Map
+                </Button>
+              </Grid>
+            </Grid>
           </Box>
           <Typography variant="h6" gutterBottom>
             Predicted Risk Percentage
@@ -198,6 +231,19 @@ function Form() {
           )}
         </Paper>
       </Grow>
+      {homeState.tiffData && (
+        <Modal
+          open={open}
+          onClose={handleClose}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <FloodMap data={homeState.tiffData} />
+        </Modal>
+      )}
     </Box>
   );
 }
