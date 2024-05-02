@@ -63,10 +63,21 @@ const FloodMap: React.FC<FloodMapProps> = ({ data }) => {
     const rect = canvasRef.current?.getBoundingClientRect();
     const x = event.clientX - (rect?.left ?? 0);
     const y = event.clientY - (rect?.top ?? 0);
-    const i = Math.floor((y / dimensions.height) * data.length);
-    const j = Math.floor((x / dimensions.width) * data[0].length);
-    const height = data[i][j];
-    setFloodHeight(`Flood height at (${i}, ${j}): ${height.toFixed(2)}`);
+    if (!rect) return;
+    const dataIndexY = Math.floor((y / rect.height) * data.length);
+    const dataIndexX = Math.floor((x / rect.width) * data[0].length);
+
+    if (
+      dataIndexY >= 0 &&
+      dataIndexY < data.length &&
+      dataIndexX >= 0 &&
+      dataIndexX < data[0].length
+    ) {
+      const height = data[dataIndexY][dataIndexX];
+      setFloodHeight(
+        `Flood height at (${dataIndexY}, ${dataIndexX}): ${height.toFixed(2)}`
+      );
+    }
   };
 
   // Color mapping function
