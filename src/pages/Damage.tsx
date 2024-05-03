@@ -74,7 +74,7 @@ export default function Damage() {
                   !homeState.floodDamageError &&
                   homeState.floodDamage && (
                     <Chip
-                      label={`Flood Height: ${homeState.floodDamage}m`}
+                      label={`Damage: ${homeState.floodDamage}m`}
                       sx={{
                         m: 5,
                         px: 10,
