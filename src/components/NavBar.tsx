@@ -122,8 +122,9 @@ export default function NavBar() {
             onClick={handleModeChange}
           />
           <Button
-            variant="outlined"
+            variant="contained"
             sx={{ m: 1 }}
+            color="success"
             onClick={handleClickViewMap}
             disabled={!homeState.tiffData}
           >

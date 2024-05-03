@@ -75,7 +75,7 @@ const FloodMap: React.FC<FloodMapProps> = ({ data }) => {
     ) {
       const height = data[dataIndexY][dataIndexX];
       setFloodHeight(
-        `Flood height at (${dataIndexY}, ${dataIndexX}): ${height.toFixed(2)}`
+        `Flood height at (${dataIndexY}, ${dataIndexX}): ${height.toFixed(2)} m`
       );
     }
   };

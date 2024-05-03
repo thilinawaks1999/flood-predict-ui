@@ -62,7 +62,7 @@ export const fetchFloodHeight = createAsyncThunk(
       request.longitude
     );
 
-    return data.floodHeight;
+    return data.flood_height;
   }
 );
 
@@ -71,16 +71,27 @@ export const fetchFloodDamage = createAsyncThunk(
   async (request: {
     latitude: number;
     longitude: number;
-    buildingType: string;
-    buildingMaterials: string;
     buildingAge: number;
+    estimatedValue: number;
+    buildingHeight: number;
+    floors: number;
+    walls: string;
+    roof: string;
+    pillars: string;
   }): Promise<string> => {
     const data = await fetchFloodDamageRequest(
       request.latitude,
-      request.longitude
+      request.longitude,
+      request.buildingAge,
+      request.estimatedValue,
+      request.buildingHeight,
+      request.floors,
+      request.walls,
+      request.roof,
+      request.pillars
     );
 
-    return data.floodDamage;
+    return data.predicted_class;
   }
 );
 
@@ -88,7 +99,7 @@ export const fetchTiffData = createAsyncThunk(
   "home/fetchTiffData",
   async (): Promise<number[][]> => {
     const data = await fetchTiffDataRequest();
-    return data.tiffData;
+    return data.image;
   }
 );
 
