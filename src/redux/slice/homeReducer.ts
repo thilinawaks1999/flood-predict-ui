@@ -47,7 +47,7 @@ export const changeTheme = createAsyncThunk(
 
 export const changeComponent = createAsyncThunk(
   "home/changeComponent",
-  async (request: { component: "height" | "damage" }) => {
+  async (request: { component: "height" | "damage" | "map" }) => {
     return {
       currentComponent: request.component,
     };
@@ -98,6 +98,19 @@ export const fetchFloodDamage = createAsyncThunk(
 export const fetchTiffData = createAsyncThunk(
   "home/fetchTiffData",
   async (): Promise<number[][]> => {
+    const data = await fetchTiffDataRequest();
+    return data.image;
+  }
+);
+
+export const fetchTiffDataWithStreamData = createAsyncThunk(
+  "home/fetchTiffData",
+  async (request: {
+    upstream1: number;
+    upstream2: number;
+    downstream1: number;
+    downstream2: number;
+  }): Promise<number[][]> => {
     const data = await fetchTiffDataRequest();
     return data.image;
   }

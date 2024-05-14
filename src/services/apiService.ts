@@ -48,3 +48,4 @@ export const fetchTiffDataRequest = async () => {
   const response = await apiService.get("/");
   return response.data;
 };
+

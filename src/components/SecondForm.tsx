@@ -1,7 +1,15 @@
 import React from "react";
 import { useAppDispatch } from "../redux/hooks";
 import { fetchFloodDamage } from "../redux/slice/homeReducer";
-import { Box, Paper, TextField, Typography, Grow } from "@mui/material";
+import {
+  Box,
+  Paper,
+  TextField,
+  Typography,
+  Grow,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import * as Yup from "yup";
 import { Formik, Form as FormHandle, ErrorMessage, Field } from "formik";
@@ -76,7 +84,7 @@ function SecondForm() {
                 name="latitude"
                 type="number"
                 label="Latitude"
-                variant="outlined"
+                variant="standard"
                 as={TextField}
                 sx={{ mb: 2 }}
                 fullWidth
@@ -94,7 +102,7 @@ function SecondForm() {
                 name="longitude"
                 type="number"
                 label="Longitude"
-                variant="outlined"
+                variant="standard"
                 as={TextField}
                 sx={{ mb: 2 }}
                 fullWidth
@@ -112,7 +120,7 @@ function SecondForm() {
                 name="buildingAge"
                 type="number"
                 label="Building Age"
-                variant="outlined"
+                variant="standard"
                 as={TextField}
                 sx={{ mb: 2 }}
                 fullWidth
@@ -130,7 +138,7 @@ function SecondForm() {
                 name="estimatedValue"
                 type="number"
                 label="Estimated Value"
-                variant="outlined"
+                variant="standard"
                 as={TextField}
                 sx={{ mb: 2 }}
                 fullWidth
@@ -148,7 +156,7 @@ function SecondForm() {
                 name="floors"
                 type="number"
                 label="Floors"
-                variant="outlined"
+                variant="standard"
                 as={TextField}
                 sx={{ mb: 2 }}
                 fullWidth
@@ -166,7 +174,7 @@ function SecondForm() {
                 name="buildingHeight"
                 type="number"
                 label="Building Height"
-                variant="outlined"
+                variant="standard"
                 as={TextField}
                 sx={{ mb: 2 }}
                 fullWidth
@@ -182,12 +190,19 @@ function SecondForm() {
 
               <Field
                 name="walls"
+                as={Select}
                 label="Walls"
-                variant="outlined"
-                as={TextField}
-                sx={{ mb: 2 }}
+                variant="standard"
+                displayEmpty
                 fullWidth
-              />
+                sx={{ mb: 2 }}
+              >
+                <MenuItem value="">
+                  <em>Walls</em>
+                </MenuItem>
+                <MenuItem value="Brick">Brick</MenuItem>
+                <MenuItem value="Block">Block</MenuItem>
+              </Field>
 
               <ErrorMessage
                 render={(msg) => (
@@ -200,12 +215,19 @@ function SecondForm() {
 
               <Field
                 name="roof"
+                as={Select}
                 label="Roof"
-                variant="outlined"
-                as={TextField}
-                sx={{ mb: 2 }}
+                variant="standard"
+                displayEmpty
                 fullWidth
-              />
+                sx={{ mb: 2 }}
+              >
+                <MenuItem value="">
+                  <em>Roof</em>
+                </MenuItem>
+                <MenuItem value="Asbestos">Asbestos</MenuItem>
+                <MenuItem value="Roofing tiles<">Roofing tiles</MenuItem>
+              </Field>
 
               <ErrorMessage
                 render={(msg) => (
@@ -218,12 +240,19 @@ function SecondForm() {
 
               <Field
                 name="pillars"
+                as={Select}
                 label="Pillars"
-                variant="outlined"
-                as={TextField}
-                sx={{ mb: 2 }}
+                variant="standard"
+                displayEmpty
                 fullWidth
-              />
+                sx={{ mb: 2 }}
+              >
+                <MenuItem value="">
+                  <em>Pillars</em>
+                </MenuItem>
+                <MenuItem value="None">None</MenuItem>
+                <MenuItem value="Concrete">Concrete</MenuItem>
+              </Field>
 
               <ErrorMessage
                 render={(msg) => (

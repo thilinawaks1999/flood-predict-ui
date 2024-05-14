@@ -10,7 +10,6 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
   changeComponent,
   changeTheme,
-  fetchTiffData,
 } from "../redux/slice/homeReducer";
 import { Button, MenuItem, Modal } from "@mui/material";
 import FloodMap from "./FloodMap";
@@ -69,7 +68,7 @@ export default function NavBar() {
 
   React.useEffect(() => {
     if (!homeState.tiffData) {
-      dispatch(fetchTiffData());
+      //dispatch(fetchTiffData());
     }
   }, [dispatch, homeState.tiffData]);
 
@@ -99,6 +98,10 @@ export default function NavBar() {
     dispatch(changeComponent({ component: "damage" }));
   };
 
+  const handleClickMap = () => {
+    dispatch(changeComponent({ component: "map" }));
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -116,6 +119,11 @@ export default function NavBar() {
               Flood Damage
             </Typography>
           </MenuItem>
+          <MenuItem onClick={handleClickMap}>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Generate Map
+            </Typography>
+          </MenuItem>
           <FormControlLabel
             control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
             label=""
@@ -130,6 +138,7 @@ export default function NavBar() {
           >
             View Map
           </Button>
+        
         </Toolbar>
       </AppBar>
       {homeState.tiffData && (
